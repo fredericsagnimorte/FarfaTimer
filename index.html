@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Le Farfa'Timer</title>
+    <link rel="icon" type="image/webp" href="./images/Le_Farfa_Des.webp" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header>🎱 Le Farfa'Timer 🎯</header>
+
+    <main>
+      <!-- GAUCHE : Calendrier + Réservations -->
+      <section class="left-zone">
+        <div class="card" style="flex: 1">
+          <div class="calendar-header">
+            <h2>Calendrier</h2>
+          </div>
+          <div id="calendar"></div>
+          <div class="backup-controls">
+            <h3>Sauvegarde</h3>
+            <button id="exportBackupBtn">💾 Exporter sauvegarde</button>
+            <button id="importBackupBtn">📂 Importer sauvegarde</button>
+            <input type="file" id="importBackupInput" accept=".json" hidden />
+          </div>
+        </div>
+      </section>
+
+      <!-- DROITE : Timers -->
+      <aside class="right-zone">
+        <div class="card timer" data-timer="1">
+          <h3>Timer Billard</h3>
+
+          <label>Durée (minutes) :</label>
+          <input
+            type="number"
+            min="5"
+            value="30"
+            class="duration-input"
+            step="5"
+          />
+
+          <div class="timer-display" id="display1">30:00</div>
+          <div class="timer-controls">
+            <button class="startButton">Start</button>
+            <button class="pauseButton">Pause</button>
+            <button class="stopButton">Stop</button>
+          </div>
+        </div>
+
+        <div class="card timer" data-timer="2">
+          <h3>Timer Fléchettes 1</h3>
+
+          <label>Durée (minutes) :</label>
+          <input type="number" min="5" value="20" class="duration-input" />
+
+          <div class="timer-display" id="display2">20:00</div>
+          <div class="timer-controls">
+            <button class="startButton">Start</button>
+            <button class="pauseButton">Pause</button>
+            <button class="stopButton">Stop</button>
+          </div>
+        </div>
+
+        <div class="card timer" data-timer="3">
+          <h3>Timer Fléchettes 2</h3>
+
+          <label>Durée (minutes) :</label>
+          <input type="number" min="5" value="20" class="duration-input" />
+
+          <div class="timer-display" id="display3">20:00</div>
+          <div class="timer-controls">
+            <button class="startButton">Start</button>
+            <button class="pauseButton">Pause</button>
+            <button class="stopButton">Stop</button>
+          </div>
+        </div>
+      </aside>
+    </main>
+    <dialog id="reservationModal">
+      <form method="dialog" class="reservation-form">
+        <h3>Nouvelle réservation</h3>
+
+        <label>
+          Ressource :
+          <select id="resResource" required>
+            <option value="">-- Choisir --</option>
+            <option value="Billard">Billard</option>
+            <option value="Fléchettes 1">Fléchettes 1</option>
+            <option value="Fléchettes 2">Fléchettes 2</option>
+          </select>
+        </label>
+
+        <label>
+          Heure de début :
+          <select id="resStart" required></select>
+        </label>
+
+        <label>
+          Heure de fin :
+          <select id="resEnd" required></select>
+        </label>
+
+        <div class="modal-actions">
+          <button type="button" id="deleteReservationBtn" class="danger" hidden>
+            Supprimer
+          </button>
+          <button value="cancel" id="cancelReservationBtn">Annuler</button>
+          <button value="confirm" id="validateReservationBtn">Valider</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/index.global.min.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
