@@ -1,6 +1,6 @@
 :root {
-  --green: rgb(127, 217, 109);
-  --green-dark: rgb(90, 180, 80);
+  --green: #306138;
+  --green-dark: #5fbe6f;
   --bg: #f4f8f4;
   --radius: 16px;
 }
@@ -21,6 +21,7 @@ body {
 }
 
 header {
+  color: white;
   background: var(--green);
   padding: 20px;
   text-align: center;
@@ -61,17 +62,18 @@ main {
 }
 
 .view-buttons button {
+  color: white;
   margin-left: 6px;
 }
 
 button {
+  color: white;
   background: var(--green);
   border: none;
   border-radius: 999px;
   padding: 8px 14px;
   cursor: pointer;
   font-weight: bold;
-  color: #0f2a0f;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
@@ -93,11 +95,11 @@ button:hover {
 }
 
 .fc {
-  --fc-border-color: rgb(127 217 109);
-  --fc-button-bg-color: rgb(127 217 109);
-  --fc-button-border-color: rgb(127 217 109);
-  --fc-button-hover-bg-color: rgb(100 190 85);
-  --fc-button-active-bg-color: rgb(90 170 75);
+  --fc-border-color: rgb(56, 97, 48);
+  --fc-button-bg-color: rgb(56, 97, 48);
+  --fc-button-border-color: rgb(56, 97, 48);
+  --fc-button-hover-bg-color: rgb(90, 167, 77);
+  --fc-button-active-bg-color: rgb(117, 212, 100);
 }
 
 aside h3 {
@@ -132,6 +134,7 @@ aside h3 {
 }
 
 .timer-controls button {
+  color: white;
   margin: 4px;
   width: 80px;
 }

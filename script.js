@@ -71,10 +71,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         buttons.forEach(btn => {
-            const action = btn.dataset.action;
-            if (action === 'start') btn.addEventListener('click', start);
-            if (action === 'pause') btn.addEventListener('click', pause);
-            if (action === 'stop') btn.addEventListener('click', stop);
+            if (btn.classList.contains('startButton')) {
+                btn.addEventListener('click', start);
+            }
+            if (btn.classList.contains('pauseButton')) {
+                btn.addEventListener('click', pause);
+            }
+            if (btn.classList.contains('stopButton')) {
+                btn.addEventListener('click', stop);
+            }
         });
 
         input.addEventListener('change', () => {
@@ -127,6 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
         locale: 'fr',
+
+        buttonText: {
+            today: "Aujourd'hui",
+            month: "Mois",
+            week: "Semaine",
+            day: "Jour"
+        },
         initialView: 'dayGridMonth',
         headerToolbar: {
             left: 'prev,next today',
@@ -134,6 +146,9 @@ document.addEventListener('DOMContentLoaded', () => {
             right: 'dayGridMonth,timeGridWeek,timeGridDay'
         },
         selectable: true,
+        validRange: {
+            start: new Date().toISOString().split('T')[0]
+        },
         events: []
     });
 
