@@ -122,6 +122,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 endSelect.add(new Option(time, time));
             }
         }
+
+        // Défaut 12:00 → 13:00
+        startSelect.value = "12:00";
+        endSelect.value = "13:00";
     }
     populateTimeSelects();
 
@@ -140,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             day: "Jour"
         },
         initialView: 'dayGridMonth',
+        selectable: false,
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
@@ -156,15 +161,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     calendar.on('eventClick', info => {
         const event = info.event;
-
         const dialog = document.getElementById('reservationModal');
+
         dialog.dataset.date = event.startStr.split('T')[0];
+        dialog.dataset.editingId = event.id;
 
         document.getElementById('resResource').value = event.title;
         document.getElementById('resStart').value = event.startStr.substring(11, 16);
         document.getElementById('resEnd').value = event.endStr.substring(11, 16);
 
-        editingReservationId = event.id;
+        // Afficher le bouton supprimer pour modification
         document.getElementById('deleteReservationBtn').hidden = false;
 
         dialog.showModal();
@@ -183,11 +189,31 @@ document.addEventListener('DOMContentLoaded', () => {
     /* =====================================================
        POPUP RÉSERVATION
     ===================================================== */
+    const dialog = document.getElementById('reservationModal');
+    const form = dialog.querySelector('form');
+
+    // Empêche le clic dans le formulaire de fermer
+    form.addEventListener('click', e => e.stopPropagation());
+
+    // Tout clic sur le dialog (donc le fond) ferme
+    dialog.addEventListener('click', () => dialog.close());
+
+    // ESC fonctionne déjà
+    dialog.addEventListener('cancel', e => {
+        e.preventDefault();
+        dialog.close();
+    });
+
     function openReservationPopup(date) {
-        editingReservationId = null;
-        document.getElementById('deleteReservationBtn').hidden = true;
         const dialog = document.getElementById('reservationModal');
+
+        // Mettre la date dans le dialog
         dialog.dataset.date = date;
+
+        // Remettre le formulaire à ses valeurs par défaut
+        resetReservationForm();
+
+        // Ouvrir le popup
         dialog.showModal();
     }
 
@@ -202,9 +228,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }) || null;
     }
 
-    calendar.on('select', info => {
-        openReservationPopup(info.startStr.split('T')[0]);
-        calendar.unselect();
+    function resetReservationForm() {
+        const dialog = document.getElementById('reservationModal');
+
+        // Valeurs par défaut
+        document.getElementById('resResource').value = "";  // -- Choisir --
+        document.getElementById('resStart').value = "12:00"; // début par défaut
+        document.getElementById('resEnd').value = "13:00";   // fin par défaut
+
+        // Masquer le bouton supprimer
+        document.getElementById('deleteReservationBtn').hidden = true;
+
+        // Supprimer l'id de modification
+        dialog.dataset.editingId = "";
+    }
+
+    calendar.on('dateClick', info => {
+        openReservationPopup(info.dateStr);
     });
 
     document.getElementById('cancelReservationBtn')
@@ -220,6 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
 
             const dialog = document.getElementById('reservationModal');
+
             const date = dialog.dataset.date;
 
             const resource = document.getElementById('resResource').value;
@@ -297,22 +338,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('deleteReservationBtn')
         .addEventListener('click', () => {
-
-            if (!editingReservationId) return;
+            const dialog = document.getElementById('reservationModal');
+            const editingId = dialog.dataset.editingId;
+            if (!editingId) return;
 
             if (!confirm("Supprimer cette réservation ?")) return;
 
             // Supprimer du tableau
-            reservations = reservations.filter(r => r.id != editingReservationId);
+            reservations = reservations.filter(r => r.id != editingId);
             saveReservations(reservations);
 
             // Supprimer du calendrier
-            const event = calendar.getEventById(editingReservationId);
+            const event = calendar.getEventById(editingId);
             if (event) event.remove();
 
-            editingReservationId = null;
+            // Réinitialiser
+            dialog.dataset.editingId = "";
             document.getElementById('deleteReservationBtn').hidden = true;
-            document.getElementById('reservationModal').close();
+            dialog.close();
         });
 
 
