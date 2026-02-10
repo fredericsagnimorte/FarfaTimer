@@ -191,6 +191,17 @@ document.addEventListener('DOMContentLoaded', () => {
         dialog.showModal();
     }
 
+    function findConflict({ date, resource, start, end, excludeId = null }) {
+
+        return reservations.find(r => {
+            if (r.date !== date) return false;
+            if (r.resource !== resource) return false;
+            if (excludeId && r.id == excludeId) return false;
+
+            return start < r.end && end > r.start;
+        }) || null;
+    }
+
     calendar.on('select', info => {
         openReservationPopup(info.startStr.split('T')[0]);
         calendar.unselect();
@@ -217,6 +228,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!resource || !start || !end || end <= start) {
                 alert("Informations invalides");
+                return;
+            }
+
+            const conflict = findConflict({
+                date,
+                resource,
+                start,
+                end,
+                excludeId: editingReservationId
+            });
+
+            if (conflict) {
+                alert(
+                    `Le ${resource} est déjà réservé entre ${conflict.start} et ${conflict.end}`
+                );
                 return;
             }
 
